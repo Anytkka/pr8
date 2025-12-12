@@ -68,6 +68,8 @@
 				
 				if(_login != "") {
 					if(_password != "") {
+						//добавить проверку на корректность пароля
+
 						if(_password == _passwordCopy) {
 							loading.style.display = "block";
 							button.className = "button_diactive";
