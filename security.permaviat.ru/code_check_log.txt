@@ -1,0 +1,29 @@
+
+=== 2025-12-18 10:39:10 ===
+User ID: 34, Input code: 373106
+DB Code: 373106, Expires: 2025-12-18 10:48:51
+SUCCESS: User authenticated - ID: 34, Login: Anna
+SUCCESS: Code matched from database
+
+=== 2025-12-18 10:39:14 ===
+ERROR: no_session
+
+=== 2025-12-18 10:44:46 ===
+User ID: 34, Input code: 615731
+DB Code: 615731, Expires: 2025-12-18 10:53:53
+Current time: 1766043886, Expires timestamp: 1766044433
+SUCCESS: User authenticated - ID: 34, Login: Anna
+SUCCESS: Code matched from database
+
+=== 2025-12-18 10:45:05 ===
+ERROR: no_session
+
+=== 2025-12-18 10:45:07 ===
+ERROR: no_session
+
+=== 2025-12-18 10:56:17 ===
+User ID: 34, Input code: 178490
+DB Code: 178490, Expires: 2025-12-18 11:05:58
+Current time: 1766044577, Expires timestamp: 1766045158
+SUCCESS: User authenticated - ID: 34, Login: Anna
+SUCCESS: Code matched from database

@@ -1,0 +1,24 @@
+2025-12-18 10:38:51 | Sending mail for user_id: 34 | Login: Anna | Email: eltyshevaanna2006@yandex.ru
+2025-12-18 10:38:51 | Generated code: 373106 for user_id: 34
+2025-12-18 10:38:51 | Code 373106 saved to DB for user_id 34
+2025-12-18 10:38:51 | Verified: Code in DB is: 373106
+2025-12-18 10:38:51 | Письмо успешно отправлено через SMTP
+2025-12-18 10:38:51 | УСПЕХ: Код 373106 отправлен на eltyshevaanna2006@yandex.ru
+2025-12-18 10:43:53 | Sending mail for user_id: 34 | Login: Anna | Email: eltyshevaanna2006@yandex.ru
+2025-12-18 10:43:53 | Generated code: 615731 for user_id: 34
+2025-12-18 10:43:53 | Code 615731 saved to DB for user_id 34
+2025-12-18 10:43:53 | Verified: Code in DB is: 615731
+2025-12-18 10:43:54 | Письмо успешно отправлено через SMTP
+2025-12-18 10:43:54 | УСПЕХ: Код 615731 отправлен на eltyshevaanna2006@yandex.ru
+2025-12-18 10:49:35 | Sending mail for user_id: 34 | Login: Anna | Email: eltyshevaanna2006@yandex.ru
+2025-12-18 10:49:35 | Generated code: 567868 for user_id: 34
+2025-12-18 10:49:35 | Code 567868 saved to DB for user_id 34
+2025-12-18 10:49:35 | Verified: Code in DB is: 567868
+2025-12-18 10:49:36 | Письмо успешно отправлено через SMTP
+2025-12-18 10:49:36 | УСПЕХ: Код 567868 отправлен на eltyshevaanna2006@yandex.ru
+2025-12-18 10:55:58 | Sending mail for user_id: 34 | Login: Anna | Email: eltyshevaanna2006@yandex.ru
+2025-12-18 10:55:58 | Generated code: 178490 for user_id: 34
+2025-12-18 10:55:58 | Code 178490 saved to DB for user_id 34
+2025-12-18 10:55:58 | Verified: Code in DB is: 178490
+2025-12-18 10:55:58 | Письмо успешно отправлено через SMTP
+2025-12-18 10:55:58 | УСПЕХ: Код 178490 отправлен на eltyshevaanna2006@yandex.ru

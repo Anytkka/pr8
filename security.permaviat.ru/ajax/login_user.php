@@ -4,36 +4,43 @@ include("../settings/connect_datebase.php");
 
 header('Content-Type: text/plain; charset=utf-8');
 
-// Получаем данные
 $login = trim($_POST['login'] ?? '');
 $password = $_POST['password'] ?? '';
 
-// Проверка входных данных
 if (empty($login) || empty($password)) {
-    echo 'empty';
+    echo "empty_fields";
     exit;
 }
 
 // Ищем пользователя
-$query_user = $mysqli->query("SELECT * FROM `users` WHERE `login`='".$mysqli->real_escape_string($login)."'");
-$id = -1;
-$db_password = '';
+$stmt = $mysqli->prepare("SELECT id, password, email FROM users WHERE login = ?");
+$stmt->bind_param("s", $login);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
 
-if($user_read = $query_user->fetch_row()) {
-    $id = $user_read[0];
-    $db_password = $user_read[2]; // пароль из базы
-}
-
-if ($id == -1) {
-    echo 'not_found';
+if (!$user) {
+    echo "user_not_found";
     exit;
 }
 
 // Проверяем пароль
-if ($password == $db_password) {
-    $_SESSION['user'] = $id;
-    echo $id; // возвращаем ID пользователя
-} else {
-    echo 'wrong';
+if (!password_verify($password, $user['password'])) {
+    if ($password !== $user['password']) {
+        echo "wrong_password";
+        exit;
+    }
 }
+
+
+if (empty($user['email'])) {
+    echo "no_email";
+    exit;
+}
+
+
+$_SESSION['preuser'] = $user['id'];
+$_SESSION['user_email'] = $user['email'];
+
+echo "success";
 ?>
