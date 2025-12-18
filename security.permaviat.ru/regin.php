@@ -122,9 +122,34 @@
 			} 
 
 			function CheckPassword(value) {
-				let regex = /^(?=.*[0-9])(?=.*[!@#$%^&*\-_=])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*\-_=]{8,}$/;
-				return regex.test(value);
+			let errors = [];
+			
+			if (value.length < 8) {
+				errors.push("Минимум 8 символов");
 			}
+			
+			if (!/\d/.test(value)) {
+				errors.push("Хотя бы одна цифра (0-9)");
+			}
+			
+			if (!/[A-Z]/.test(value)) {
+				errors.push("Хотя бы одна заглавная буква (A-Z)");
+			}
+			
+			if (!/[!@#$%^&*\-_=]/.test(value)) {
+				errors.push("Хотя бы один специальный символ (! @ # $ % ^ & * - _ =)");
+			}
+			
+			if (!/^[0-9a-zA-Z!@#$%^&*\-_=]+$/.test(value)) {
+				errors.push("Только латинские буквы, цифры и специальные символы");
+			}
+			if (errors.length > 0) {
+				alert("Пароль не соответствует требованиям:\n" + errors.join("\n"));
+				return false;
+			}
+			
+			return true;
+		}
 
 			function PressToEnter(e) {
 				if (e.keyCode == 13) {
