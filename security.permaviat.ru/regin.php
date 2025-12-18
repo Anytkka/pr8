@@ -58,74 +58,83 @@
 		</div>
 		
 		<script>
-			var loading = document.getElementsByClassName("loading")[0];
-			var button = document.getElementsByClassName("button")[0];
-			
-			function RegIn() {
-				var _login = document.getElementsByName("_login")[0].value;
-				var _password = document.getElementsByName("_password")[0].value;
-				var _passwordCopy = document.getElementsByName("_passwordCopy")[0].value;
-				
-				if(_login != "") {
-					if(_password != "") {
-						//добавить проверку на корректность пароля
+		var loading = document.getElementsByClassName("loading")[0];
+		var button = document.getElementsByClassName("button")[0];
 
-						if(_password == _passwordCopy) {
-							loading.style.display = "block";
-							button.className = "button_diactive";
-							
-							var data = new FormData();
-							data.append("login", _login);
-							data.append("password", _password);
-							
-							// AJAX запрос
-							$.ajax({
-								url         : 'ajax/regin_user.php',
-								type        : 'POST', // важно!
-								data        : data,
-								cache       : false,
-								dataType    : 'html',
-								// отключаем обработку передаваемых данных, пусть передаются как есть
-								processData : false,
-								// отключаем установку заголовка типа запроса. Так jQuery скажет серверу что это строковой запрос
-								contentType : false, 
-								// функция успешного ответа сервера
-								success: function (_data) {
-									console.log("Авторизация прошла успешно, id: " +_data);
-									if(_data == -1) {
-										alert("Пользователь с таким логином существует.");
-										loading.style.display = "none";
-										button.className = "button";
-									} else {
-										location.reload();
-										loading.style.display = "none";
-										button.className = "button";
-									}
-								},
-								// функция ошибки
-								error: function( ){
-									console.log('Системная ошибка!');
-									loading.style.display = "none";
-									button.className = "button";
-								}
-							});
-						} else alert("Пароли не совподают.");
-					} else alert("Введите пароль.");
-				} else alert("Введите логин.");
+		function RegIn() {
+    		var _login = document.getElementsByName("_login")[0].value;
+			var _password = document.getElementsByName("_password")[0].value;
+			var _passwordCopy = document.getElementsByName("_passwordCopy")[0].value;
+    
+    
+			if(_login == "") {
+				alert("Введите логин.");
+				return;
 			}
-			
+			if(_password == "") {
+				alert("Введите пароль");
+				return;
+			}
+			if(CheckPassword(_password) == false){
+				alert("Пароль не соответствует следующим требованиям:\n- Минимум 8 символов\n- Хотя бы одна цифра\n- Хотя бы одна заглавная буква\n- Хотя бы один специальный символ");
+				return;
+			}
+			if(_password != _passwordCopy){
+				alert("Пароли не совпадают");
+				return;
+			}
+
+				loading.style.display = "block";
+				button.className = "button_diactive";
+							
+				var data = new FormData();
+				data.append("login", _login);
+				data.append("password", _password);
+							
+				// AJAX запрос
+				$.ajax({
+					url         : 'ajax/regin_user.php',
+					type        : 'POST',
+					data        : data,
+					cache       : false,
+					dataType    : 'html',
+					processData : false,
+					contentType : false,
+					success: function (_data) {
+						console.log("Регистрация прошла успешно, id: " + _data);
+						if(_data == -1) {
+							alert("Пользователь с таким логином существует.");
+							loading.style.display = "none";
+							button.className = "button";
+						} else {
+							location.reload();
+							loading.style.display = "none";
+							button.className = "button";
+						}
+					},
+					error: function(){
+						console.log('Системная ошибка!');
+						alert('Произошла системная ошибка. Попробуйте позже.');
+						loading.style.display = "none";
+						button.className = "button";
+					}
+				});
+			} 
+
+			function CheckPassword(value) {
+				let regex = /^(?=.*[0-9])(?=.*[!@#$%^&*\-_=])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*\-_=]{8,}$/;
+				return regex.test(value);
+			}
+
 			function PressToEnter(e) {
 				if (e.keyCode == 13) {
 					var _login = document.getElementsByName("_login")[0].value;
 					var _password = document.getElementsByName("_password")[0].value;
 					var _passwordCopy = document.getElementsByName("_passwordCopy")[0].value;
 					
-					if(_password != "") {
-						if(_login != "") {
-							if(_passwordCopy != "") {
-								RegIn();
-							}
-						}
+					// Исправлены условия (были неправильные проверки на пустоту)
+					if(_password != "" && _login != "" && _passwordCopy != "") {
+						RegIn();
 					}
 				}
 			}
