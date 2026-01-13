@@ -49,11 +49,12 @@ if ($check_email->num_rows > 0) {
 
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-$mysqli->query("INSERT INTO users (login, email, password, roll) VALUES (
+$mysqli->query("INSERT INTO users (login, email, password, roll, password_changed_at) VALUES (
     '".$mysqli->real_escape_string($login)."',
     '".$mysqli->real_escape_string($email)."',
     '".$mysqli->real_escape_string($hashed_password)."',
-    0
+    0,
+    NOW()
 )");
 
 echo "success";

@@ -3,16 +3,33 @@
 	include("./settings/connect_datebase.php");
 	
 	if (isset($_SESSION['user'])) {
-		if($_SESSION['user'] == -1) {
-			header("Location: login.php");
-		} else {
-			// проверяем пользователя, если админ выкидываем на админа
+		if($_SESSION['user'] != -1) {
+			
+			if (isset($_SESSION['session_token'])) {
+				$stmt = $mysqli->prepare("SELECT session_token FROM users WHERE id = ?");
+				$stmt->bind_param("i", $_SESSION['user']);
+				$stmt->execute();
+				$stmt->bind_result($db_token);
+				$stmt->fetch();
+				$stmt->close();
+				
+				if (!$db_token || $_SESSION['session_token'] !== $db_token) {
+					session_destroy();
+					header("Location: login.php?reason=session_ended");
+					exit();
+				}
+			}
+	
 			$user_to_query = $mysqli->query("SELECT `roll` FROM `users` WHERE `id` = ".$_SESSION['user']);
 			$user_to_read = $user_to_query->fetch_row();
 			
 			if($user_to_read[0] == 1) header("Location: login.php");
+		} else {
+			header("Location: login.php");
 		}
- 	} else header("Location: login.php");
+ 	} else {
+		header("Location: login.php");
+	}
 	
 ?>
 <!DOCTYPE HTML>

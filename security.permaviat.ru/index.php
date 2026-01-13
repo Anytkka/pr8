@@ -1,6 +1,21 @@
 <?php
 	session_start();
 	include("./settings/connect_datebase.php");
+
+	if (isset($_SESSION['user']) && $_SESSION['user'] != -1 && isset($_SESSION['session_token'])) {
+		$stmt = $mysqli->prepare("SELECT session_token FROM users WHERE id = ?");
+		$stmt->bind_param("i", $_SESSION['user']);
+		$stmt->execute();
+		$stmt->bind_result($db_token);
+		$stmt->fetch();
+		$stmt->close();
+		
+		if (!$db_token || $_SESSION['session_token'] !== $db_token) {
+			session_destroy();
+			header("Location: login.php?reason=session_ended");
+			exit();
+		}
+	}
 ?>
 <!DOCTYPE HTML>
 <html>

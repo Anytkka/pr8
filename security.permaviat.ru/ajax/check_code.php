@@ -60,17 +60,20 @@ if ($result) {
         }
         
         if ($db_code && $db_code == $input_code) {
-            $clear_stmt = $mysqli->prepare("UPDATE users SET verification_code = NULL, code_expires = NULL WHERE id = ?");
-            $clear_stmt->bind_param("i", $user_id);
-            $clear_stmt->execute();
-            $clear_stmt->close();
-            
             $user_stmt = $mysqli->prepare("SELECT id, login, roll FROM users WHERE id = ?");
             $user_stmt->bind_param("i", $user_id);
             $user_stmt->execute();
             $user_result = $user_stmt->get_result();
             
             if ($user_result && $user_data = $user_result->fetch_assoc()) {
+                $new_session_token = bin2hex(random_bytes(32));
+                
+                $update_stmt = $mysqli->prepare("UPDATE users SET session_token = ? WHERE id = ?");
+                $update_stmt->bind_param("si", $new_session_token, $user_id);
+                $update_stmt->execute();
+                $update_stmt->close();
+
+                $_SESSION['session_token'] = $new_session_token;
                 $_SESSION['user'] = $user_data['id'];
                 $_SESSION['user_login'] = $user_data['login'];
                 $_SESSION['user_roll'] = $user_data['roll'];
@@ -78,6 +81,11 @@ if ($result) {
                 file_put_contents($log_file, "SUCCESS: User authenticated - ID: " . $user_data['id'] . ", Login: " . $user_data['login'] . "\n", FILE_APPEND);
             }
             $user_stmt->close();
+            
+            $clear_stmt = $mysqli->prepare("UPDATE users SET verification_code = NULL, code_expires = NULL WHERE id = ?");
+            $clear_stmt->bind_param("i", $user_id);
+            $clear_stmt->execute();
+            $clear_stmt->close();
             
             unset($_SESSION["code"]);
             unset($_SESSION["code_time"]);
@@ -114,22 +122,30 @@ if (isset($_SESSION["code"])) {
     }
     
     if ($session_code == $input_code) {
-        $clear_stmt = $mysqli->prepare("UPDATE users SET verification_code = NULL, code_expires = NULL WHERE id = ?");
-        $clear_stmt->bind_param("i", $user_id);
-        $clear_stmt->execute();
-        $clear_stmt->close();
-        
         $user_stmt = $mysqli->prepare("SELECT id, login, roll FROM users WHERE id = ?");
         $user_stmt->bind_param("i", $user_id);
         $user_stmt->execute();
         $user_result = $user_stmt->get_result();
         
         if ($user_result && $user_data = $user_result->fetch_assoc()) {
+            $new_session_token = bin2hex(random_bytes(32));
+            
+            $update_stmt = $mysqli->prepare("UPDATE users SET session_token = ? WHERE id = ?");
+            $update_stmt->bind_param("si", $new_session_token, $user_id);
+            $update_stmt->execute();
+            $update_stmt->close();
+            
+            $_SESSION['session_token'] = $new_session_token;
             $_SESSION['user'] = $user_data['id'];
             $_SESSION['user_login'] = $user_data['login'];
             $_SESSION['user_roll'] = $user_data['roll'];
         }
         $user_stmt->close();
+        
+        $clear_stmt = $mysqli->prepare("UPDATE users SET verification_code = NULL, code_expires = NULL WHERE id = ?");
+        $clear_stmt->bind_param("i", $user_id);
+        $clear_stmt->execute();
+        $clear_stmt->close();
         
         unset($_SESSION["code"]);
         unset($_SESSION["code_time"]);
