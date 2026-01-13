@@ -60,7 +60,7 @@ if ($result) {
         }
         
         if ($db_code && $db_code == $input_code) {
-            $user_stmt = $mysqli->prepare("SELECT id, login, roll FROM users WHERE id = ?");
+            $user_stmt = $mysqli->prepare("SELECT id, login, roll, last_country FROM users WHERE id = ?");
             $user_stmt->bind_param("i", $user_id);
             $user_stmt->execute();
             $user_result = $user_stmt->get_result();
@@ -73,6 +73,24 @@ if ($result) {
                 $update_stmt->execute();
                 $update_stmt->close();
 
+                $ip = $_SERVER['REMOTE_ADDR'];
+                $country_data = @file_get_contents("http://ip-api.com/json/{$ip}");
+                
+                if ($country_data) {
+                    $location = json_decode($country_data, true);
+                    $current_country = $location['country'] ?? 'Unknown';
+                
+                    $country_stmt = $mysqli->prepare("UPDATE users SET last_country = ? WHERE id = ?");
+                    $country_stmt->bind_param("si", $current_country, $user_id);
+                    $country_stmt->execute();
+                    $country_stmt->close();
+                    
+                    if (!empty($user_data['last_country']) && $user_data['last_country'] != $current_country) {
+                        $_SESSION['country_check_code'] = rand(100000, 999999);
+                        $_SESSION['need_country_check'] = 1;
+                    }
+                }
+                
                 $_SESSION['session_token'] = $new_session_token;
                 $_SESSION['user'] = $user_data['id'];
                 $_SESSION['user_login'] = $user_data['login'];
@@ -92,7 +110,11 @@ if ($result) {
             unset($_SESSION["preuser"]);
             
             file_put_contents($log_file, "SUCCESS: Code matched from database\n", FILE_APPEND);
-            echo "success";
+            if (isset($_SESSION['need_country_check']) && $_SESSION['need_country_check'] == 1) {
+                echo "country_check:" . $_SESSION['country_check_code'];
+            } else {
+                echo "success";
+            }
             exit;
         } else {
             file_put_contents($log_file, "DB check failed: DB code = '$db_code', Input = '$input_code'\n", FILE_APPEND);
@@ -122,7 +144,7 @@ if (isset($_SESSION["code"])) {
     }
     
     if ($session_code == $input_code) {
-        $user_stmt = $mysqli->prepare("SELECT id, login, roll FROM users WHERE id = ?");
+        $user_stmt = $mysqli->prepare("SELECT id, login, roll, last_country FROM users WHERE id = ?");
         $user_stmt->bind_param("i", $user_id);
         $user_stmt->execute();
         $user_result = $user_stmt->get_result();
@@ -134,6 +156,24 @@ if (isset($_SESSION["code"])) {
             $update_stmt->bind_param("si", $new_session_token, $user_id);
             $update_stmt->execute();
             $update_stmt->close();
+
+            $ip = $_SERVER['REMOTE_ADDR'];
+            $country_data = @file_get_contents("http://ip-api.com/json/{$ip}");
+            
+            if ($country_data) {
+                $location = json_decode($country_data, true);
+                $current_country = $location['country'] ?? 'Unknown';
+            
+                $country_stmt = $mysqli->prepare("UPDATE users SET last_country = ? WHERE id = ?");
+                $country_stmt->bind_param("si", $current_country, $user_id);
+                $country_stmt->execute();
+                $country_stmt->close();
+                
+                if (!empty($user_data['last_country']) && $user_data['last_country'] != $current_country) {
+                    $_SESSION['country_check_code'] = rand(100000, 999999);
+                    $_SESSION['need_country_check'] = 1;
+                }
+            }
             
             $_SESSION['session_token'] = $new_session_token;
             $_SESSION['user'] = $user_data['id'];
@@ -152,7 +192,11 @@ if (isset($_SESSION["code"])) {
         unset($_SESSION["preuser"]);
         
         file_put_contents($log_file, "SUCCESS: Code matched from session\n", FILE_APPEND);
-        echo "success";
+        if (isset($_SESSION['need_country_check']) && $_SESSION['need_country_check'] == 1) {
+            echo "country_check:" . $_SESSION['country_check_code'];
+        } else {
+            echo "success";
+        }
         exit;
     } else {
         file_put_contents($log_file, "Session check failed: Session code = '$session_code', Input = '$input_code'\n", FILE_APPEND);

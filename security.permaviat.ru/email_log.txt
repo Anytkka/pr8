@@ -70,3 +70,9 @@
 2026-01-13 11:06:58 | Verified: Code in DB is: 472579
 2026-01-13 11:06:59 | Письмо успешно отправлено через SMTP
 2026-01-13 11:06:59 | УСПЕХ: Код 472579 отправлен на eltyshevaanna2006@yandex.ru
+2026-01-13 11:26:58 | Sending mail for user_id: 36 | Login: Anna | Email: eltyshevaanna2006@yandex.ru
+2026-01-13 11:26:58 | Generated code: 321896 for user_id: 36
+2026-01-13 11:26:58 | Code 321896 saved to DB for user_id 36
+2026-01-13 11:26:58 | Verified: Code in DB is: 321896
+2026-01-13 11:26:59 | Письмо успешно отправлено через SMTP
+2026-01-13 11:26:59 | УСПЕХ: Код 321896 отправлен на eltyshevaanna2006@yandex.ru
