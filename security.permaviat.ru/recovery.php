@@ -26,7 +26,7 @@
 		<div class="top-menu">
 			<a href=# class = "singin"><img src = "img/ic-login.png"/></a>
 		
-			<a href=#><img src = "img/logo1.png"/></a>.
+			<a href=#><img src = "img/logo1.png"/></a>
 			<div class="name">
 				<a href="index.php">
 					<div class="subname">Электронная приемная комиссия</div>
